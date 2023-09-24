@@ -1,7 +1,6 @@
-import React, { useState, useRef, useEffect } from "react";
+import React from "react";
 import "./App.css";
-import Selectable from "./Selectable";
-// import SelectableWrapper from "./SelectableWrapper";
+import { DragSelectProvider } from "./DragSelectProvider";
 import TimeLine from "./Timeline";
 
 const items = [
@@ -18,7 +17,7 @@ const items = [
     end: "2023-09-23 17:00",
     content: "Video B",
     className: "myVideoItem",
-    // editable: true,
+    editable: false,
   },
   // {
   //   start: "2023-09-23 15:30",
@@ -34,11 +33,16 @@ function App() {
 
   return (
     <div className="App">
-      {/* <Selectable selectionFinish={selectionFinish}> */}
-      {/* <SelectableWrapper> */}
-      <TimeLine items={items} />
-      {/* </SelectableWrapper> */}
-      {/* </Selectable> */}
+      <DragSelectProvider
+        settings={{
+          // area: document.querySelector("#timeline"),
+          autoScrollSpeed: 5,
+          overflowTolerance: { x: 25, y: 25 },
+          selectorClass: "my-ds-selector",
+        }}
+      >
+        <TimeLine items={items} />
+      </DragSelectProvider>
     </div>
   );
 }

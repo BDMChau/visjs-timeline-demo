@@ -3,24 +3,22 @@ import "./App.css";
 import VisTimeline from "react-visjs-timeline";
 import { moment } from "vis";
 import ReactDOM from "react-dom/client";
-import SelectableItem from "./SelectableItem";
-import MouseSelection from "./MouseSelection";
-import { createSelectable } from "react-selectable-fast";
-import { boxesIntersect } from "react-drag-to-select";
+import DragSelect from "dragselect";
+import { useDragSelect } from "./DragSelectProvider";
 
 const Timeline = ({ items }) => {
-  const [selectionBox, setSelectionBox] = useState();
-  const [selectedIndexes, setSelectedIndexes] = useState([]);
-  const selectableItems = useRef([]);
-
+  const { ds, setDS } = useDragSelect();
+  const [selectedIds, setSelectedIds] = useState([]);
   const timelineRef = useRef(null);
 
   const clickHandler = (props) => {
     // timelineRef.current.$el.focus(1);
-    console.log("clickHandler", props);
+    // console.log("clickHandler", props);
+    // resetDragSelect();
   };
-  const currentTimeTickHandler = (props) => {
-    // console.log("currentTimeTickHandler", props);
+  const selectHandler = (props) => {
+    // timelineRef.current.$el.focus(1);
+    // console.log("selectHandler", props);
   };
 
   const rangeChangeHandler = (props) => {
@@ -32,32 +30,31 @@ const Timeline = ({ items }) => {
     console.log("contextmenuHandler", props);
   };
 
-  const dragoverHandler = (props) => {
-    console.log("dragoverHandler", props);
-  };
-  const dropHandler = (props) => {
-    console.log("drop", props);
-  };
   const itemoverHandler = (props) => {
-    console.log("itemoverHandler", props);
+    // console.log("itemoverHandler", props);
   };
   const timechangeHandler = (props) => {
-    console.log("timechangeHandler", props);
+    // console.log("timechangeHandler", props);
   };
   const mouseOverHandler = (props) => {
     // console.log("mouseOverHandler", props);
   };
-  const mouseDownHandler = (props) => {
-    console.log("mouseDownHandler", props);
-  };
-  const mouseUpHandler = (props) => {
-    console.log("mouseUpHandler", props);
-  };
+  // const mouseDownHandler = (props) => {
+  //   props.event.stopPropagation();
+  //   console.log("mouseDownHandler", props);
+  // };
+  // const mouseUpHandler = (props) => {
+  //   props.event.stopPropagation();
+
+  //   console.log("mouseUpHandler", props);
+  // };
   const mouseMoveHandler = (props) => {
     // console.log("mouseMoveHandler", props);
   };
 
   const options = {
+    selectable: true,
+    multiselect: true,
     // moment: function (date) {
     //   return moment(date).utcOffset("+07:00");
     // },
@@ -83,41 +80,77 @@ const Timeline = ({ items }) => {
     stack: true, // override item each other
     // snap: function to define ratio moving items
     template: (item, element, data) => {
-      selectableItems.current.push({ el: element, id: item.id });
       const root = ReactDOM.createRoot(element);
       return root.render(
-        <SelectableItem
-          item={item}
-          selected={selectedIndexes.includes(item.id)}
-        />
+        <div
+          className="myItem"
+          key={item.id}
+          id={item.id}
+          // style={{
+          //   background: selectedIds.includes(item.id.toString())
+          //     ? "green"
+          //     : "unset",
+          // }}
+        >
+          {item.content}
+        </div>
       );
     },
     // timeAxis: { scale: "second", step: 1 },
     type: "range", // 'box', 'point', 'range', and 'background'
   };
 
-  const handleSelectionChange = useCallback(
-    (box) => {
-      setSelectionBox(box);
-      const indexesToSelect = [];
-      selectableItems.current.forEach((item, index) => {
-        const { left, top, width, height } = item?.el?.getBoundingClientRect();
+  useEffect(() => {
+    // timelineRef.current.$el.moveTo(new Date());
+    // timelineRef.current.$el.on("mouseUp", (props) => {
+    //   // console.log("mouse mouseUp", props);
+    // });
+  }, []);
 
-        if (boxesIntersect(box, { left, top, width, height })) {
-          console.log("item:===", item);
-          indexesToSelect.push(item.id);
-        }
+  useEffect(() => {
+    if (!ds) return;
+    ds.addSelectables(document.querySelectorAll(".myVideoItem"));
+
+    const dsId = ds.subscribe("callback", (e) => {
+      console.log("callbac", e.items);
+      // ds.clearSelection();
+
+      const _selectedIds = [];
+      e.items.forEach((item) => {
+        const id =
+          item?.childNodes?.[0]?.childNodes?.[0]?.childNodes?.[0]?.id || "";
+        id && _selectedIds.push(id);
+
+        ds?.addSelection(item);
       });
-      setSelectedIndexes(indexesToSelect);
-    },
-    [selectableItems]
-  );
+
+      // setSelectedIds(_selectedIds);
+    });
+
+    return () => {
+      ds.unsubscribe("callback", null, dsId);
+    };
+  }, [ds]);
 
   return (
     <div>
-      <MouseSelection onSelectionChange={handleSelectionChange} />
-
-      <div className="timeline">
+      <div
+        onClick={() => {
+          // setSelectedIds([]);
+          // ds.clearSelection();
+          // setDS(null);
+        }}
+      >
+        AAAA
+      </div>
+      <div
+        className="timeline"
+        id="timeline"
+        onDoubleClick={() => {}}
+        onMouseDown={() => {
+          console.log("aaa");
+        }}
+      >
         <VisTimeline
           ref={timelineRef}
           items={items}
@@ -127,15 +160,14 @@ const Timeline = ({ items }) => {
           //events
           // currentTimeTickHandler={currentTimeTickHandler}
           clickHandler={clickHandler}
+          selectHandler={selectHandler}
           rangechangeHandler={rangeChangeHandler}
           contextmenuHandler={contextmenuHandler}
-          dragoverHandler={dragoverHandler}
-          dropHandler={dropHandler}
           itemoverHandler={itemoverHandler}
           timechangeHandler={timechangeHandler}
           mouseOverHandler={mouseOverHandler}
-          mouseDownHandler={mouseDownHandler}
-          mouseUpHandler={mouseUpHandler}
+          // mouseDownHandler={mouseDownHandler}
+          // mouseUpHandler={mouseUpHandler}
           mouseMoveHandler={mouseMoveHandler}
         />
       </div>

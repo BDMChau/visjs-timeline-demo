@@ -34,6 +34,7 @@
   background-color: white !important;
   color: white;
   cursor: default;
+  visibility: unset !important;
 }
 
 .timeline {
@@ -46,8 +47,12 @@
   flex-direction: column;
   justify-content: center;
 }
-.selectable-selectbox {
+
+.my-ds-selector {
   cursor: default;
-  background: none;
-  border: 1px dashed blue;
+  background: none !important;
+  border: 1px dashed blue !important;
+}
+.ds-selected {
+  background: green !important;
 }
