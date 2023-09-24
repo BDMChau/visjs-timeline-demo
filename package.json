@@ -8,7 +8,11 @@
     "@testing-library/user-event": "^13.5.0",
     "react": "^18.2.0",
     "react-dom": "^18.2.0",
+    "react-drag-to-select": "5.0.8",
     "react-scripts": "5.0.1",
+    "react-selectable-fast": "^3.4.0",
+    "react-visjs-timeline": "1.5.0",
+    "vis": "^4.21.0-EOL",
     "web-vitals": "^2.1.4"
   },
   "scripts": {

@@ -1,23 +1,44 @@
-import logo from './logo.svg';
-import './App.css';
+import React, { useState, useRef, useEffect } from "react";
+import "./App.css";
+import Selectable from "./Selectable";
+// import SelectableWrapper from "./SelectableWrapper";
+import TimeLine from "./Timeline";
+
+const items = [
+  {
+    id: 1111155,
+    start: "2023-09-23 15:05",
+    end: "2023-09-23 16:00",
+    content: "Video A",
+    className: "myVideoItem",
+  },
+  {
+    id: 2,
+    start: "2023-09-23 16:10",
+    end: "2023-09-23 17:00",
+    content: "Video B",
+    className: "myVideoItem",
+    // editable: true,
+  },
+  // {
+  //   start: "2023-09-23 15:30",
+  //   end: "2023-09-23 17:00",
+  //   content: "Video C",
+  // },
+];
 
 function App() {
+  const selectionFinish = (props) => {
+    console.log("selectionFinish", props);
+  };
+
   return (
     <div className="App">
-      <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <p>
-          Edit <code>src/App.js</code> and save to reload.
-        </p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Learn React
-        </a>
-      </header>
+      {/* <Selectable selectionFinish={selectionFinish}> */}
+      {/* <SelectableWrapper> */}
+      <TimeLine items={items} />
+      {/* </SelectableWrapper> */}
+      {/* </Selectable> */}
     </div>
   );
 }
