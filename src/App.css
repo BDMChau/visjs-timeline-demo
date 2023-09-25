@@ -34,7 +34,7 @@
   background-color: white !important;
   color: white;
   cursor: default;
-  visibility: unset !important;
+  /* visibility: unset !important; */
 }
 
 .timeline {

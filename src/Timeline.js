@@ -4,10 +4,11 @@ import VisTimeline from "react-visjs-timeline";
 import { moment } from "vis";
 import ReactDOM from "react-dom/client";
 import DragSelect from "dragselect";
-import { useDragSelect } from "./DragSelectProvider";
+import { useDragSelectContext } from "./DragSelectProvider";
+import { isEmpty } from "lodash";
 
 const Timeline = ({ items }) => {
-  const { ds, setDS } = useDragSelect();
+  const { ds, setDS } = useDragSelectContext();
   const [selectedIds, setSelectedIds] = useState([]);
   const timelineRef = useRef(null);
 
@@ -126,6 +127,7 @@ const Timeline = ({ items }) => {
 
       // setSelectedIds(_selectedIds);
     });
+    console.log(ds);
 
     return () => {
       ds.unsubscribe("callback", null, dsId);
@@ -133,24 +135,15 @@ const Timeline = ({ items }) => {
   }, [ds]);
 
   return (
-    <div>
-      <div
-        onClick={() => {
-          // setSelectedIds([]);
-          // ds.clearSelection();
-          // setDS(null);
-        }}
-      >
-        AAAA
-      </div>
-      <div
-        className="timeline"
-        id="timeline"
-        onDoubleClick={() => {}}
-        onMouseDown={() => {
-          console.log("aaa");
-        }}
-      >
+    <div
+      className="timeline"
+      id="timeline"
+      onDoubleClick={() => {}}
+      onMouseDown={() => {
+        console.log("aaa");
+      }}
+    >
+      {!isEmpty(ds) && (
         <VisTimeline
           ref={timelineRef}
           items={items}
@@ -170,7 +163,7 @@ const Timeline = ({ items }) => {
           // mouseUpHandler={mouseUpHandler}
           mouseMoveHandler={mouseMoveHandler}
         />
-      </div>
+      )}
     </div>
   );
 };

@@ -1,7 +1,8 @@
 import React, { createContext, useState, useEffect, useContext } from "react";
 import DragSelect from "dragselect";
+import isEmpty from "lodash/isEmpty";
 
-const Context = createContext(null);
+const DragSelectContext = createContext(null);
 
 function DragSelectProvider({ children, settings = {} }) {
   const [ds, setDS] = useState(null);
@@ -12,27 +13,27 @@ function DragSelectProvider({ children, settings = {} }) {
       settings.area = area;
     }
 
-    // ds?.setSettings(settings);
+    if (isEmpty(ds)) {
+      setDS(new DragSelect(settings));
+    }
 
-    setDS((prevState) => {
-      if (prevState) return prevState;
-      return new DragSelect(settings);
-    });
     return () => {
-      if (ds) {
+      if (!isEmpty(ds)) {
         ds.stop();
         setDS(null);
       }
     };
   }, [ds, settings]);
 
-  // useEffect(() => {}, [ds, settings]);
-
-  return <Context.Provider value={{ ds, setDS }}>{children}</Context.Provider>;
+  return (
+    <DragSelectContext.Provider value={{ ds, setDS }}>
+      {children}
+    </DragSelectContext.Provider>
+  );
 }
 
-function useDragSelect() {
-  return useContext(Context);
-}
+const useDragSelectContext = () => {
+  return useContext(DragSelectContext);
+};
 
-export { DragSelectProvider, useDragSelect };
+export { DragSelectProvider, useDragSelectContext };
