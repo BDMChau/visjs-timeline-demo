@@ -150,58 +150,59 @@ const Timeline = ({ items = [], isLoading = false }) => {
 
   const subscribeEvents = (ref) => {
     if (!ref) return;
+    ref.on("contextmenu", (props) => {});
 
-    ref.on("mouseMove", (props) => {
-      var x = props.pageX;
-      var y = props.pageY;
+    // ref.on("mouseMove", (props) => {
+    //   var x = props.pageX;
+    //   var y = props.pageY;
 
-      const chau = document.getElementById("chau");
-      const chau2 = document.getElementById("chau2");
+    //   const chau = document.getElementById("chau");
+    //   const chau2 = document.getElementById("chau2");
 
-      if (chau2) {
-        chau2.style.left = x - 180 + "px";
-        chau2.textContent = props.time;
-      }
+    //   if (chau2) {
+    //     chau2.style.left = x - 180 + "px";
+    //     chau2.textContent = props.time;
+    //   }
 
-      if (chau) {
-        chau.style.left = x + "px";
-        chau.style.position = "absolute";
-        // chau.style.pointerEvents = "none";
-      } else {
-        var newthing = document.createElement("div");
+    //   if (chau) {
+    //     chau.style.left = x + "px";
+    //     chau.style.position = "absolute";
+    //     // chau.style.pointerEvents = "none";
+    //   } else {
+    //     var newthing = document.createElement("div");
 
-        document
-          .getElementsByClassName("vis-timeline")[0]
-          .appendChild(newthing);
+    //     document
+    //       .getElementsByClassName("vis-timeline")[0]
+    //       .appendChild(newthing);
 
-        // newthing.style.pointerEvents = "none";
-        newthing.style.position = "absolute";
-        newthing.style.width = "2px";
-        newthing.style.height = "100%";
-        newthing.style.background = "blue";
-        newthing.id = "chau";
-        newthing.style.left = x + "px";
+    //     // newthing.style.pointerEvents = "none";
+    //     newthing.style.position = "absolute";
+    //     newthing.style.width = "2px";
+    //     newthing.style.height = "100%";
+    //     newthing.style.background = "blue";
+    //     newthing.id = "chau";
+    //     newthing.style.left = x + "px";
 
-        const newthing2 = document.createElement("div");
+    //     const newthing2 = document.createElement("div");
 
-        document.getElementsByClassName("timeline")[0].appendChild(newthing2);
+    //     document.getElementsByClassName("timeline")[0].appendChild(newthing2);
 
-        // newthing.style.pointerEvents = "none";
+    //     // newthing.style.pointerEvents = "none";
 
-        newthing2.id = "chau2";
-        newthing2.textContent = props.time;
-        const style2 = {
-          position: "absolute",
-          width: "auto",
-          height: "auto",
-          background: "grey",
-          top: "-32px",
-          padding: "5px",
-        };
-        Object.assign(newthing2.style, style2);
-        newthing2.style.left = x - 50 + "px";
-      }
-    });
+    //     newthing2.id = "chau2";
+    //     newthing2.textContent = props.time;
+    //     const style2 = {
+    //       position: "absolute",
+    //       width: "auto",
+    //       height: "auto",
+    //       background: "grey",
+    //       top: "-32px",
+    //       padding: "5px",
+    //     };
+    //     Object.assign(newthing2.style, style2);
+    //     newthing2.style.left = x - 50 + "px";
+    //   }
+    // });
     ref.on("mouseDown", (props) => {});
     ref.on("mouseUp", (props) => {});
 
@@ -212,42 +213,39 @@ const Timeline = ({ items = [], isLoading = false }) => {
       ref.setCurrentTime(props.time);
     });
 
-    ref.on("rangechange", (props) => {
-      console.log("rangechange");
+    ref.on("changed", (props) => {
+      const elements = document.getElementsByClassName("vis-text vis-minor");
+
+      let text = "";
+      for (let i = 0; i < elements.length; i++) {
+        const e = elements[i];
+        if (e.className === "vis-text vis-minor vis-measure") continue;
+
+        e.style = e.style.cssText + ";display:flex;text-align: center";
+        text = e.textContent;
+        // e.textContent = "";
+
+        const child = document.createElement("div");
+        child.className = "minorThing1";
+        child.style = "display: flex;width:100%;justify-content:space-evenly";
+        for (let j = 0; j < 1; j++) {
+          const subChild = document.createElement("div");
+          subChild.className = "minorThing";
+
+          if (j === 4) {
+            subChild.textContent = text;
+            subChild.style = "font-size:12px;margin:10px 0 0 0";
+          } else {
+            subChild.style =
+              "width:1px;height:7px;margin-top:17px;background:grey;color:black;visibility:visible";
+          }
+
+          child.appendChild(subChild);
+        }
+        e.appendChild(child);
+        console.log(e);
+      }
     });
-
-    // ref.on("changed", (props) => {
-    //   const elements = document.getElementsByClassName("vis-text vis-minor");
-
-    //   let text = "";
-    //   for (let i = 0; i < elements.length; i++) {
-    //     const e = elements[i];
-    //     if (e.className === "vis-text vis-minor vis-measure") continue;
-
-    //     e.style = e.style.cssText + ";display:flex;text-align: center";
-    //     text = e.textContent;
-    //     e.textContent = "";
-
-    //     const child = document.createElement("div");
-    //     child.className = "hello";
-    //     child.style = "display: flex;width:100%;justify-content:space-evenly";
-    //     for (let j = 0; j < 9; j++) {
-    //       const subChild = document.createElement("div");
-
-    //       if (j === 4) {
-    //         subChild.textContent = text;
-    //         subChild.style = "font-size:12px;margin:10px 0 0 0";
-    //       } else {
-    //         subChild.style =
-    //           "width:1px;height:7px;margin-top:17px;background:grey;color:black;visibility:visible";
-    //       }
-
-    //       child.appendChild(subChild);
-    //     }
-    //     e.appendChild(child);
-    //     console.log(e);
-    //   }
-    // });
   };
 
   return (

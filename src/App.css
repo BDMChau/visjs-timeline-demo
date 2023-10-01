@@ -50,8 +50,16 @@
 .vis-item.myVideoItem.ds-selected {
   background: green !important;
 }
-.vis-custom-time {
-  /* cursor: none !important; */
+.vis-text.vis-minor {
+  text-align: center;
+  display: flex;
+  justify-content: center;
+}
+
+.minorThing {
+  width: 2px;
+  height: 15px;
+  background: red;
 }
 
 /* .vis-text {
