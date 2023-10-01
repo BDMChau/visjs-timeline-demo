@@ -3,14 +3,6 @@
   width: 100%;
 }
 
-.timeline {
-  width: 90%;
-  margin: 20px;
-  margin-top: 200px;
-  display: flex;
-  flex-direction: column;
-}
-
 .vis-item.myVideoItem {
   /* background-color: gray !important; */
   /* color: white; */
@@ -25,23 +17,25 @@
   padding: 0 !important;
 }
 
-.vis-item .vis-item-content .myItem {
+.vis-item.myVideoItem {
   padding: 5px;
-  /* background-color: red; */
+  background-color: lightblue !important;
 }
 
 .vis-timeline {
   background-color: white !important;
   color: white;
   cursor: default;
+  /* overflow: scroll !important; */
   /* visibility: unset !important; */
 }
 
 .timeline {
+  margin-top: 200px;
   z-index: 9;
   position: relative;
   cursor: pointer;
-  height: 300px;
+  /* height: 300px; */
   background: grey;
   display: flex;
   flex-direction: column;
@@ -53,6 +47,22 @@
   background: none !important;
   border: 1px dashed blue !important;
 }
-.ds-selected {
+.vis-item.myVideoItem.ds-selected {
   background: green !important;
+}
+.vis-custom-time {
+  /* cursor: none !important; */
+}
+
+/* .vis-text {
+  border: 1px solid red;
+} */
+
+.rct-outer {
+  height: 80px !important;
+}
+
+#mytooltip {
+  /* transform: unset !important; */
+  /* top: -50px !important; */
 }

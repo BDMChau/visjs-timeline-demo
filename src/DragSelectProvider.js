@@ -8,10 +8,11 @@ function DragSelectProvider({ children, settings = {} }) {
   const [ds, setDS] = useState(null);
 
   useEffect(() => {
-    const area = document.querySelector("#timeline");
-    if (area) {
-      settings.area = area;
-    }
+    const area = document.querySelector(".timeline");
+    // if (area) {
+    //   settings.area = area;
+    // }
+    // console.log(area);
 
     if (isEmpty(ds)) {
       setDS(new DragSelect(settings));

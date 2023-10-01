@@ -19,6 +19,8 @@ const items = [
     content: "Video B",
     className: "myVideoItem",
     editable: false,
+    visibleFrameTemplate:
+      '<div class="progress-wrapper"><div class="progress" style="width:80%"></div><label class="progress-label">80 per cent<label></div>',
   },
   // {
   //   start: "2023-09-23 15:30",
@@ -26,7 +28,8 @@ const items = [
   //   content: "Video C",
   // },
 ];
-
+// don't allow zoom when the according
+// only allow zooming when configured
 function App() {
   const selectionFinish = (props) => {
     console.log("selectionFinish", props);
