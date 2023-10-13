@@ -149,6 +149,7 @@ const Timeline = ({ items = [], isLoading = false }) => {
   }, []);
 
   const subscribeEvents = (ref) => {
+    let drag = false;
     if (!ref) return;
     ref.on("contextmenu", (props) => {});
 
@@ -203,53 +204,97 @@ const Timeline = ({ items = [], isLoading = false }) => {
     //     newthing2.style.left = x - 50 + "px";
     //   }
     // });
-    ref.on("mouseDown", (props) => {});
+    ref.on("mouseDown", (props) => {
+      // console.log("down");
+    });
     ref.on("mouseUp", (props) => {});
+    ref.on("rangechange", (props) => {
+      drag = true;
+    });
+    ref.on("rangechanged", (props) => {
+      setTimeout(() => {
+        drag = false;
+      }, 0);
+    });
 
     ref.on("click", (props) => {
-      ref.setOptions({
-        showCurrentTime: true,
-      });
-      ref.setCurrentTime(props.time);
-    });
-
-    ref.on("changed", (props) => {
-      const elements = document.getElementsByClassName("vis-text vis-minor");
-
-      let text = "";
-      for (let i = 0; i < elements.length; i++) {
-        const e = elements[i];
-        if (e.className === "vis-text vis-minor vis-measure") continue;
-
-        e.style = e.style.cssText + ";display:flex;text-align: center";
-        text = e.textContent;
-        // e.textContent = "";
-
-        const child = document.createElement("div");
-        child.className = "minorThing1";
-        child.style = "display: flex;width:100%;justify-content:space-evenly";
-        for (let j = 0; j < 1; j++) {
-          const subChild = document.createElement("div");
-          subChild.className = "minorThing";
-
-          if (j === 4) {
-            subChild.textContent = text;
-            subChild.style = "font-size:12px;margin:10px 0 0 0";
-          } else {
-            subChild.style =
-              "width:1px;height:7px;margin-top:17px;background:grey;color:black;visibility:visible";
-          }
-
-          child.appendChild(subChild);
-        }
-        e.appendChild(child);
-        console.log(e);
+      try {
+        ref.removeCustomTime("customTime");
+      } catch (error) {
+        ref.addCustomTime(props.time, "customTime");
       }
+      function getRndInteger(min, max) {
+        return Math.floor(Math.random() * (max - min)) + min;
+      }
+      let timeSet = 0;
+      setInterval(() => {
+        try {
+          const time = ref.getCustomTime("customTime");
+          const random = getRndInteger(200, 300);
+          const { start, end } = ref.getWindow();
+          // ref.moveTo(time, { animation: false });
+          ref.setWindow(
+            moment(start).add(random, "millisecond").toDate(),
+            moment(end).add(random, "millisecond").toDate(),
+            { animation: false }
+          );
+          ref.setCustomTime(
+            moment(time).add(random, "millisecond").toDate(),
+            "customTime"
+          );
+        } catch (err) {}
+      }, 100);
+
+      // if (!drag) {
+      //   ref.setOptions({
+      //     showCurrentTime: true,
+      //   });
+      //   ref.setCurrentTime(props.time);
+      // }
     });
+
+    // ref.on("changed", (props) => {
+    //   const elements = document.getElementsByClassName("vis-text vis-minor");
+
+    //   let text = "";
+    //   for (let i = 0; i < elements.length; i++) {
+    //     const e = elements[i];
+    //     if (e.className === "vis-text vis-minor vis-measure") continue;
+
+    //     e.style = e.style.cssText + ";display:flex;text-align: center";
+    //     text = e.textContent;
+    //     // e.textContent = "";
+
+    //     const child = document.createElement("div");
+    //     child.className = "minorThing1";
+    //     child.style = "display: flex;width:100%;justify-content:space-evenly";
+    //     for (let j = 0; j < 1; j++) {
+    //       const subChild = document.createElement("div");
+    //       subChild.className = "minorThing";
+
+    //       if (j === 4) {
+    //         subChild.textContent = text;
+    //         subChild.style = "font-size:12px;margin:10px 0 0 0";
+    //       } else {
+    //         subChild.style =
+    //           "width:1px;height:7px;margin-top:17px;background:grey;color:black;visibility:visible";
+    //       }
+
+    //       child.appendChild(subChild);
+    //     }
+    //     e.appendChild(child);
+    //     console.log(e);
+    //   }
+    // });
   };
 
   return (
-    <div>
+    <div
+      style={{
+        width: "95%",
+        margin: "auto",
+      }}
+    >
       <div
         onMouseLeave={(e) => {
           const chau = document.getElementById("chau");
