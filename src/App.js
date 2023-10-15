@@ -10,14 +10,14 @@ const items = [
     start: "2023-09-23 15:05",
     end: "2023-09-23 16:00",
     content: "Video A",
-    className: "myVideoItem",
+    className: "myVideoItem 1111155",
   },
   {
     id: 2,
     start: "2023-09-23 16:10",
     end: "2023-09-23 17:00",
     content: "Video B",
-    className: "myVideoItem",
+    className: "myVideoItem 2",
     editable: false,
     visibleFrameTemplate:
       '<div class="progress-wrapper"><div class="progress" style="width:80%"></div><label class="progress-label">80 per cent<label></div>',
