@@ -116,11 +116,14 @@ const Timeline = ({ items = [], isLoading = false }) => {
 
     const update = ds.subscribe("Interaction:update", (e) => {
       const pageX = e?.event?.pageX;
-      const ref = containerRef?.current;
-      const timeline = document.querySelector(".vis-timeline");
+      const ref = instanceRef?.current;
+      const timeline = document.getElementsByClassName("vis-timeline")?.[0];
       if (pageX && ref && timeline) {
         isSelecting = true;
-        timeline?.click();
+        // console.log(timeline.onmousemove());
+        if (ref?.dom?.root) {
+          ref.dom.root.dispatchEvent(new Event("mousemove"));
+        }
       }
     });
 
@@ -158,6 +161,7 @@ const Timeline = ({ items = [], isLoading = false }) => {
   }, []);
 
   const subscribeEvents = (ref) => {
+    const data = [];
     let drag = false;
     let interval = null;
     if (!ref) return;
@@ -166,6 +170,9 @@ const Timeline = ({ items = [], isLoading = false }) => {
     });
     ref.on("mouseUp", (props) => {
       console.log("up", props);
+    });
+    ref.on("contextmenu", (props) => {
+      console.log("contextmenu", props);
     });
 
     ref.on("rangechange", (props) => {
@@ -184,7 +191,7 @@ const Timeline = ({ items = [], isLoading = false }) => {
     });
 
     ref.on("click", (props) => {
-      console.log("click", props);
+      console.log("click", data);
 
       if (isSelecting) {
         return;
@@ -226,7 +233,10 @@ const Timeline = ({ items = [], isLoading = false }) => {
     });
 
     ref.on("mouseMove", (props) => {
-      // console.log("mouseMove", props);
+      console.log("move");
+      if (!data.includes(props.time)) {
+        data.push(props.time);
+      }
     });
 
     // ref.on("changed", (props) => {
