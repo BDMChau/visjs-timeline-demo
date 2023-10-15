@@ -33,11 +33,11 @@ var groups = [
 let scale = "a";
 
 const Timeline = ({ items = [], isLoading = false }) => {
-  let isSelecting = false;
   const { ds } = useDragSelectContext();
 
   const instanceRef = useRef(null); // use this to use events, methods of timeline
   const containerRef = useRef(null);
+  const isSelecting = useRef(false);
 
   const options = {
     clickToUse: false,
@@ -108,10 +108,9 @@ const Timeline = ({ items = [], isLoading = false }) => {
     if (!ds) return;
     ds.addSelectables(document.querySelectorAll(".myVideoItem"));
 
-    console.log("ds.getSelectables()", ds.getSelectables());
-
     const dsId = ds.subscribe("Interaction:end", (e) => {
-      console.log("callbac", e);
+      isSelecting.current = false;
+      document.getElementById("timeline2").style.pointerEvents = "none";
     });
 
     const update = ds.subscribe("Interaction:update", (e) => {
@@ -119,10 +118,10 @@ const Timeline = ({ items = [], isLoading = false }) => {
       const ref = instanceRef?.current;
       const timeline = document.getElementsByClassName("vis-timeline")?.[0];
       if (pageX && ref && timeline) {
-        isSelecting = true;
-        // console.log(timeline.onmousemove());
+        isSelecting.current = true;
+
         if (ref?.dom?.root) {
-          ref.dom.root.dispatchEvent(new Event("mousemove"));
+          ref.dom.root.dispatchEvent(new Event("click"));
         }
       }
     });
@@ -191,9 +190,7 @@ const Timeline = ({ items = [], isLoading = false }) => {
     });
 
     ref.on("click", (props) => {
-      console.log("click", data);
-
-      if (isSelecting) {
+      if (isSelecting.current) {
         return;
       }
 
@@ -233,9 +230,10 @@ const Timeline = ({ items = [], isLoading = false }) => {
     });
 
     ref.on("mouseMove", (props) => {
-      console.log("move");
-      if (!data.includes(props.time)) {
-        data.push(props.time);
+      if (props.event.ctrlKey) {
+        document.getElementById("timeline2").style.pointerEvents = null;
+      } else {
+        document.getElementById("timeline2").style.pointerEvents = "none";
       }
     });
 
@@ -433,8 +431,7 @@ const Timeline = ({ items = [], isLoading = false }) => {
         width: "95%",
         margin: "auto",
         // background: "grey",
-        padding: "10px",
-        zIndex: "9999999999",
+        position: "relative",
       }}
     >
       {/* <canvas
@@ -446,6 +443,24 @@ const Timeline = ({ items = [], isLoading = false }) => {
         id="canvas"
       ></canvas> */}
       <div
+        id="timeline2"
+        style={{
+          width: "100%",
+          height: "200px",
+          background: "none",
+          zIndex: 99999,
+          position: "absolute",
+          marginTop: "200px",
+          pointerEvents: "none",
+        }}
+      ></div>
+      <div
+        onClick={() => {
+          console.log(ds);
+          const selection = ds.getSelection();
+          console.log(selection);
+          ds.removeSelection(selection);
+        }}
         onMouseLeave={(e) => {
           const chau = document.getElementById("chau");
           const chau2 = document.getElementById("chau2");

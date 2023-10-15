@@ -8,7 +8,7 @@ function DragSelectProvider({ children, settings = {} }) {
   const [ds, setDS] = useState(null);
 
   useEffect(() => {
-    const area = document.querySelector(".timeline");
+    const area = document.querySelector("#timeline2");
     if (area) {
       settings.area = area;
     }
